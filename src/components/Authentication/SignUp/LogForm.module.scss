@@ -1,0 +1,51 @@
+.logform {
+  &__wrapper {
+    padding: 48px 32px;
+    margin: 0 auto;
+    width: 384px;
+    height: 599px;
+    background-color: #fff;
+    box-sizing: border-box;
+    margin-top: 60px;
+    margin-bottom: 200px;
+  }
+
+  &__postscript {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 20px;
+    text-align: center;
+    color: #8c8c8c;
+    margin: 0;
+    margin-top: -16px;
+  }
+
+  &__title-create {
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+    text-align: center;
+    color: #262626;
+    margin: 0;
+    margin-bottom: 21px;
+  }
+
+  &__input-sign {
+    font-size: 14px;
+    line-height: 22px;
+    display: flex;
+    align-items: center;
+    color: #262626;
+    margin-bottom: 2px;
+  }
+
+  &__separator {
+    border-top: 1px solid #e8e8e8;
+    width: 100%;
+    height: 0;
+    display: block;
+    margin-top: -3px;
+    margin-bottom: 8px;
+  }
+}
