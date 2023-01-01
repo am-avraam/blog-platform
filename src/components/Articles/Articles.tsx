@@ -16,11 +16,12 @@ import { State } from '../../models/stateTypes'
 import a from './Articles.module.scss'
 
 const Articles: React.FC = () => {
-  const { posts, status, error } = useSelector((state: State) => state.posts)
+  const { posts, status: postsStatus, error: postsError } = useSelector((state: State) => state.posts)
+  const { error: userError } = useSelector((state: State) => state.user)
 
-  if (status === 'loading') return <Loading />
-  if (status === 'rejected') return <Error />
-  // if (status === 'resolved')
+  if (postsStatus === 'loading') return <Loading />
+  if (postsError === 'Server error') return <Error />
+
   return (
     <div className={a.articles}>
       {posts.map((post: IPost) => {

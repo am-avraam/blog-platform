@@ -40,31 +40,29 @@ export const fetchPosts = createAsyncThunk<Response, undefined, { rejectValue: s
   async function (_, { rejectWithValue }) {
     const response = await fetch('https://blog.kata.academy/api/articles?limit=5')
     if (!response.ok) {
-      return rejectWithValue('Server Error')
+      return rejectWithValue('Server error')
     }
     const data = await response.json()
-    console.log(data)
 
     return data
   }
 )
 
-export const togglePage = createAsyncThunk('posts/togglePage', async function (num: number, { rejectWithValue }) {
-  const limit = 5
-  const skip = num * limit - limit
-  try {
+export const togglePage = createAsyncThunk<ToggleResponse, number, { rejectValue: string }>(
+  'posts/togglePage',
+  async function (num: number, { rejectWithValue }) {
+    const limit = 5
+    const skip = num * limit - limit
+
     const response = await fetch(`https://blog.kata.academy/api/articles?limit=${limit}&offset=${skip}`)
     if (!response.ok) {
-      throw new Error('Something went wrong')
+      return rejectWithValue('Server Error')
     }
     const data = await response.json()
-    console.log(data)
 
     return [num, data]
-  } catch (error) {
-    if (error instanceof Error) return rejectWithValue(error.message)
   }
-})
+)
 
 const setLoading = (state: PostsState) => {
   state.status = 'loading'

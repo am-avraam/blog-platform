@@ -9,7 +9,9 @@ import Header from '../Header/Header'
 import Articles from '../Articles/Articles'
 import Article from '../Article/Article'
 import PostPage from '../PostPage/PostPage'
-import LogForm from '../Authentication/SignUp/LogForm'
+import SignUp from '../Authentication/SignUp/SignUp'
+import SignIn from '../Authentication/SignIn/SignIn'
+import { rememberLogIn } from '../../redux/userSlice'
 
 import classes from './App.module.scss'
 
@@ -18,6 +20,7 @@ function App() {
 
   useEffect(() => {
     dispatch(togglePage(1))
+    dispatch(rememberLogIn())
   }, [dispatch])
 
   return (
@@ -34,7 +37,8 @@ function App() {
               return <PostPage slug={slug} />
             }}
           />
-          <Route path="/sign-up" exact component={LogForm} />
+          <Route path="/sign-up" exact component={SignUp} />
+          <Route path="/sign-in" exact component={SignIn} />
         </Switch>
         {/* <Articles /> */}
       </Router>

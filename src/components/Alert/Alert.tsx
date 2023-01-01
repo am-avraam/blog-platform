@@ -11,7 +11,7 @@ const Error: React.FC = () => {
     <Space direction="vertical" style={{ width: '100%', paddingBottom: '100px' }}>
       <Alert
         message="Произошла ошибка"
-        description="Рейсов, подходящих под заданные фильтры, не найдено."
+        // description="не найдено."
         type="error"
         style={{ width: '100%', height: '184px', display: 'flex', alignItems: 'center' }}
       />
