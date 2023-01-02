@@ -32,7 +32,7 @@ const Header: React.FC = () => {
             <Link className={classes['header__logged-button']} to={'/sign-in'}>
               Create article
             </Link>
-            <Link className={classes['header__logged-button']} to={'/sign-in'}>
+            <Link className={classes['header__logged-button']} to={'/profile'}>
               <p>{user?.user.username}</p>
               <img className={classes['header__logged-avatar']} src={user?.user.image || logo} />
             </Link>

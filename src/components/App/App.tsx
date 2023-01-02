@@ -12,6 +12,7 @@ import PostPage from '../PostPage/PostPage'
 import SignUp from '../Authentication/SignUp/SignUp'
 import SignIn from '../Authentication/SignIn/SignIn'
 import { rememberLogIn } from '../../redux/userSlice'
+import EditProfile from '../Authentication/EditProfile/EditProfile'
 
 import classes from './App.module.scss'
 
@@ -39,8 +40,8 @@ function App() {
           />
           <Route path="/sign-up" exact component={SignUp} />
           <Route path="/sign-in" exact component={SignIn} />
+          <Route path="/profile" exact component={EditProfile} />
         </Switch>
-        {/* <Articles /> */}
       </Router>
     </div>
   )

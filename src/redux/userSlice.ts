@@ -28,6 +28,15 @@ export interface PostDataToLogIn {
   }
 }
 
+export interface PostDataToUpdate {
+  user: {
+    email?: string
+    password?: string
+    username?: string
+    image?: string
+  }
+}
+
 export type UserState = {
   user: null | Response
   isLoged: boolean
@@ -57,23 +66,17 @@ export const rememberLogIn = createAsyncThunk('user/remind-login', async functio
   const token = localStorage.getItem('token')
   if (!token) return
 
-  // {
-  // let initialization = await fetch(address)
-  // let initResponse = await initialization.json()
-  // localStorage.setItem('movieGuestSession', initResponse.guest_session_id)
-  // }
-
   const response = await fetch('https://blog.kata.academy/api/user', {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
-    // body: JSON.stringify(data),
   })
 
   if (!response.ok) {
-    throw new Error('Cannot remember')
+    return rejectWithValue('Cannot remember')
+    // throw new Error('Cannot remember')
   }
   const resp = await response.json()
 
@@ -126,6 +129,28 @@ export const createUser = createAsyncThunk<Response, PostDataToCreate, { rejectV
   }
 )
 
+export const updateUser = createAsyncThunk<Response, PostDataToUpdate, { rejectValue: string }>(
+  'user/update-user',
+  async function (data: PostDataToUpdate, { rejectWithValue }) {
+    console.log(data)
+
+    const response = await fetch('https://blog.kata.academy/api/user', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+
+    if (!response.ok) return rejectWithValue('Could not update your data')
+
+    const resp = await response.json()
+    console.log(resp)
+
+    return resp
+  }
+)
+
 const setLoading = (state: UserState) => {
   state.status = 'loading'
   state.error = null
@@ -143,15 +168,17 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-
+      .addCase(createUser.pending, setLoading)
       .addCase(createUser.fulfilled, loged)
 
       .addCase(logIn.fulfilled, loged)
-
-      .addCase(createUser.pending, setLoading)
       .addCase(logIn.pending, setLoading)
+
       .addCase(rememberLogIn.pending, setLoading)
       .addCase(rememberLogIn.fulfilled, loged)
+
+      .addCase(updateUser.fulfilled, loged)
+      .addCase(updateUser.pending, setLoading)
 
       .addMatcher(isError, (state, action: PayloadAction<string>) => {
         state.error = action.payload
