@@ -18,16 +18,18 @@
   box-sizing: border-box;
   min-height: 500px;
 
+  &__avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+  }
+
   &__about {
     display: flex;
     margin-bottom: 4px;
     justify-content: space-between;
     width: 100%;
   }
-
-  // &__info {
-  //   padding-top: 15px;
-  // }
 
   &__top {
     display: flex;

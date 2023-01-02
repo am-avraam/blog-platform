@@ -15,6 +15,18 @@
     border-radius: 6px;
   }
 
+  &__message {
+    &_updated {
+      color: #52c41a;
+      font-size: 20px;
+      font-weight: normal;
+      text-align: center;
+    }
+    &_failed {
+      color: red;
+    }
+  }
+
   &__caution {
     margin: 0;
     color: red;

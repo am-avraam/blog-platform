@@ -12,10 +12,11 @@ const Header: React.FC = () => {
 
   return (
     <header className={classes.header}>
-      <Link to={'/articles/'} className={classes.header__title}>
+      {/* <Link to={'/articles/'} className={classes.header__title}> */}
+      <a className={classes.header__title} href="/articles">
         Realworld Blog
-        {/* <span className={classes.header__title}>Realworld Blog</span> */}
-      </Link>
+      </a>
+      {/* </Link> */}
       <div className={classes.header__buttons}>
         {!isLoged && (
           <>

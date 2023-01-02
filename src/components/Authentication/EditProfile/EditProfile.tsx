@@ -12,34 +12,34 @@ export interface Values {
   username: string
   email: string
   password: string
-  confirm: string
-  remember: boolean
-}
-
-export type ValuesToUpdate = {
-  username: string
-  email: string
-  password: string
-  image: string
 }
 
 const EditProfile: React.FC = () => {
   const dispatch = useAppDispatch()
-  const { isLoged, status, error, user } = useAppSelector((state) => state.user)
+  const { isLoged, status, error, user, message } = useAppSelector((state) => state.user)
   const onFinish = (values: Values) => {
-    const postData: PostDataToUpdate = {
+    const postData: PostDataToUpdate[1] = {
       user: {
         ...Object.fromEntries(Object.entries(values).filter((el) => el[1])),
       },
     }
 
-    dispatch(updateUser(postData))
+    dispatch(updateUser([user?.user.token, postData]))
   }
-  if (status === 'loading') return <Loading />
 
+  if (status === 'loading') return <Loading />
+  if (!isLoged) return <Redirect to="/sign-in" />
   return (
     <div className={classes.logform__wrapper}>
-      <Form name="normal_login" className="login-form" initialValues={{ remember: true }} onFinish={onFinish}>
+      <Form
+        name="normal_login"
+        className="login-form"
+        // initialValues={{ username: user?.user.username }}
+        onFinish={onFinish}
+      >
+        {message === 'updated' && <h1 className={classes.logform__message_updated}>Your data successfully updated</h1>}
+        {error === 'not updated' && <h1 className={classes.logform__message_failed}>Could not update your data</h1>}
+
         <h2 className={classes['logform__title-create']}>Edit Profile</h2>
         <span className={classes['logform__input-sign']}> Username</span>
         <Form.Item

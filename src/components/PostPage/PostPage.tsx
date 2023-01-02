@@ -4,6 +4,7 @@ import { useAppSelector } from '../../hooks/redux'
 import { IPost } from '../../models/IPost'
 import Loading from '../Loading/Loading'
 import Error from '../Alert/Alert'
+import ava from '../../assets/avatar.png'
 
 import classes from './PostPage.module.scss'
 
@@ -39,7 +40,9 @@ const PostPage: React.FC<Props> = (slug) => {
                 <span className={classes.article__author}>{author.username}</span>
                 <span className={classes.article__date}>{date}</span>
               </div>
-              <div className={classes['article__author-avatar']}> </div>
+              <div className={classes['article__author-avatar']}>
+                {<img src={author.image || ava} alt="ava" className={classes.article__avatar} />}
+              </div>
             </div>
           </div>
           <div className={classes.article__content}>{description.substring(0, 30)}</div>

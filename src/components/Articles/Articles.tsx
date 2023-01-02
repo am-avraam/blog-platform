@@ -38,6 +38,7 @@ const Articles: React.FC = () => {
           cutFirstTag,
           secondTag,
           username: post.author.username,
+          image: post.author.image,
           description: post.description,
           title: post.title,
           body: post.body,

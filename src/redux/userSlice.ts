@@ -28,20 +28,24 @@ export interface PostDataToLogIn {
   }
 }
 
-export interface PostDataToUpdate {
-  user: {
-    email?: string
-    password?: string
-    username?: string
-    image?: string
+export type PostDataToUpdate = [
+  string | undefined,
+  {
+    user: {
+      email?: string
+      password?: string
+      username?: string
+      image?: string
+    }
   }
-}
+]
 
 export type UserState = {
   user: null | Response
   isLoged: boolean
   status: string | null
   error: string | null
+  message: string
 }
 
 const initialState: UserState = {
@@ -49,6 +53,7 @@ const initialState: UserState = {
   isLoged: false,
   status: null,
   error: null,
+  message: '',
 }
 
 function isError(action: AnyAction) {
@@ -57,13 +62,14 @@ function isError(action: AnyAction) {
 
 function loged(state: UserState, action: AnyAction) {
   state.status = 'resolved'
-  state.isLoged = true
+  state.isLoged = action.payload && true
   state.user = action.payload && action.payload
   state.error = null
 }
 
 export const rememberLogIn = createAsyncThunk('user/remind-login', async function (_, { rejectWithValue }) {
   const token = localStorage.getItem('token')
+
   if (!token) return
 
   const response = await fetch('https://blog.kata.academy/api/user', {
@@ -138,11 +144,12 @@ export const updateUser = createAsyncThunk<Response, PostDataToUpdate, { rejectV
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${data[0]}`,
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(data[1]),
     })
 
-    if (!response.ok) return rejectWithValue('Could not update your data')
+    if (!response.ok) return rejectWithValue('not updated')
 
     const resp = await response.json()
     console.log(resp)
@@ -162,6 +169,7 @@ const userSlice = createSlice({
   reducers: {
     logOut: (state) => {
       localStorage.removeItem('token')
+
       state.user = null
       state.isLoged = false
     },
@@ -177,7 +185,12 @@ const userSlice = createSlice({
       .addCase(rememberLogIn.pending, setLoading)
       .addCase(rememberLogIn.fulfilled, loged)
 
-      .addCase(updateUser.fulfilled, loged)
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.user = action.payload && { ...state.user, ...action.payload }
+        state.message = 'updated'
+        state.status = 'resolved'
+        state.error = null
+      })
       .addCase(updateUser.pending, setLoading)
 
       .addMatcher(isError, (state, action: PayloadAction<string>) => {
