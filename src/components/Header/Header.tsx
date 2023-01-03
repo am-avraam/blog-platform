@@ -30,7 +30,7 @@ const Header: React.FC = () => {
         )}
         {isLoged && (
           <div className={classes['header__logged-buttons']}>
-            <Link className={classes['header__logged-button']} to={'/sign-in'}>
+            <Link className={classes['header__logged-button']} to={'new-article'}>
               Create article
             </Link>
             <Link className={classes['header__logged-button']} to={'/profile'}>

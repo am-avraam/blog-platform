@@ -13,6 +13,7 @@ import SignUp from '../Authentication/SignUp/SignUp'
 import SignIn from '../Authentication/SignIn/SignIn'
 import { rememberLogIn } from '../../redux/userSlice'
 import EditProfile from '../Authentication/EditProfile/EditProfile'
+import CreateArticle from '../PostArticle/CreateArticle/CreateArticle'
 
 import classes from './App.module.scss'
 
@@ -41,6 +42,7 @@ function App() {
           <Route path="/sign-up" exact component={SignUp} />
           <Route path="/sign-in" exact component={SignIn} />
           <Route path="/profile" exact component={EditProfile} />
+          <Route path="/new-article" exact component={CreateArticle} />
         </Switch>
       </Router>
     </div>
