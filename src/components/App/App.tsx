@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import { useAppDispatch } from '../../hooks/redux'
-import { fetchPosts, togglePage } from '../../redux/firtsSlice'
+import { fetchPosts, togglePage } from '../../redux/allPostsSlice'
 import '../../styles'
 import Header from '../Header/Header'
 import Articles from '../Articles/Articles'

@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 
 import { useAppDispatch } from '../../hooks/redux'
 import './Pages.css'
-import { PostsState, togglePage } from '../../redux/firtsSlice'
+import { PostsState, togglePage } from '../../redux/allPostsSlice'
 import { State } from '../../models/stateTypes'
 
 const Pages = () => {

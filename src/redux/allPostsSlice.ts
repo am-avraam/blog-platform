@@ -69,7 +69,7 @@ const setLoading = (state: PostsState) => {
   state.error = null
 }
 
-const postsSlice = createSlice({
+const AllPostsSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {},
@@ -101,4 +101,4 @@ const postsSlice = createSlice({
 
 // export const { one, } = postsSlice.actions
 
-export default postsSlice.reducer
+export default AllPostsSlice.reducer

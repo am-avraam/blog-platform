@@ -8,7 +8,7 @@ import Article from '../Article/Article'
 import Loading from '../Loading/Loading'
 import Pages from '../Pages/Pages'
 import classes from '../Article/Article.module.scss'
-import { PostsState } from '../../redux/firtsSlice'
+import { PostsState } from '../../redux/allPostsSlice'
 import Error from '../Alert/Alert'
 import { IPost } from '../../models/IPost'
 import { State } from '../../models/stateTypes'
@@ -28,9 +28,10 @@ const Articles: React.FC = () => {
         const date = format(new Date(post.updatedAt), 'MMMM dd, yyyy')
 
         const cutFirstTag = post.tagList[0]
-          ? post.tagList[0].slice(0, post.tagList[0].indexOf(' ', 10)).replace(/\.$|,$|;$/, '')
-          : null
-        const secondTag = post.tagList[1] || null
+        // ? post.tagList[0].slice(0, post.tagList[0].indexOf(' ', 10)).replace(/\.$|,$|;$/, '')
+        // : null
+        const secondTag = post.tagList[1]
+        // || null
 
         const props = {
           slug: post.slug,

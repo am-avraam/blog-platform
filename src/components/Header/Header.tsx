@@ -1,4 +1,4 @@
-import { Link, Route } from 'react-router-dom'
+import { Link, Route, Redirect } from 'react-router-dom'
 
 import { logOut } from '../../redux/userSlice'
 import { useAppSelector, useAppDispatch } from '../../hooks/redux'
@@ -30,8 +30,10 @@ const Header: React.FC = () => {
         )}
         {isLoged && (
           <div className={classes['header__logged-buttons']}>
-            <Link className={classes['header__logged-button']} to={'new-article'}>
+            <Link className={classes['header__logged-button']} to={'/new-article'}>
+              {/* <Redirect className={classes['header__logged-button']} to="/new-article"> */}
               Create article
+              {/* </Redirect> */}
             </Link>
             <Link className={classes['header__logged-button']} to={'/profile'}>
               <p>{user?.user.username}</p>
