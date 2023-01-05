@@ -21,6 +21,10 @@ export type Response = {
   articlesCount: number
 }
 
+export type FavoriteResponse = {
+  article: IPost
+}
+
 export type ToggleResponse = [number, Response]
 
 const initialState: PostsState = {
@@ -54,13 +58,72 @@ export const togglePage = createAsyncThunk<ToggleResponse, number, { rejectValue
     const limit = 5
     const skip = num * limit - limit
 
-    const response = await fetch(`https://blog.kata.academy/api/articles?limit=${limit}&offset=${skip}`)
+    let response
+    if (!localStorage.getItem('token')) {
+      response = await fetch(`https://blog.kata.academy/api/articles?limit=${limit}&offset=${skip}`)
+    } else {
+      response = await fetch(`https://blog.kata.academy/api/articles?limit=${limit}&offset=${skip}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+    }
+
     if (!response.ok) {
       return rejectWithValue('Server Error')
     }
     const data = await response.json()
 
     return [num, data]
+  }
+)
+
+export const likeToggle = createAsyncThunk<IPost, string, { rejectValue: string }>(
+  'posts/like-toggle',
+  async function (slug: string, { rejectWithValue }) {
+    const fetchAimPost = await fetch(`https://blog.kata.academy/api/articles/${slug}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    })
+    const respWithPost = await fetchAimPost.json()
+    const isFavoritedAimPost = respWithPost.article.favorited
+    console.log(isFavoritedAimPost)
+
+    const response = await fetch(`https://blog.kata.academy/api/articles/${slug}/favorite`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    if (!response.ok) {
+      return rejectWithValue('Server Error')
+    }
+    const favoritedArticle = await response.json()
+    const { article } = favoritedArticle
+    return article
+  }
+)
+
+export const fetchPost = createAsyncThunk<IPost, string, { rejectValue: string }>(
+  'posts/fetch-post',
+  async function (slug: string, { rejectWithValue }) {
+    const fetchAimPost = await fetch(`https://blog.kata.academy/api/articles/${slug}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    })
+    const response = await fetchAimPost.json()
+
+    if (!response.ok) {
+      return rejectWithValue('Server Error')
+    }
+
+    return response.article
   }
 )
 
@@ -91,6 +154,17 @@ const AllPostsSlice = createSlice({
       })
 
       .addCase(togglePage.pending, setLoading)
+
+      .addCase(likeToggle.fulfilled, (state, action) => {
+        console.log(action.payload)
+
+        state.posts = state.posts.map((post) => {
+          if (post.slug === action.payload.slug) {
+            return action.payload
+          }
+          return post
+        })
+      })
 
       .addMatcher(isError, (state, action: PayloadAction<string>) => {
         state.error = action.payload

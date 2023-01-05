@@ -62,12 +62,18 @@ const setLoading = (state: OwnPostsState) => {
 const ownPostSlice = createSlice({
   name: 'articles',
   initialState,
-  reducers: {},
+  reducers: {
+    changeStatus(state) {
+      state.status = null
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(create.pending, setLoading)
       .addCase(create.fulfilled, (state, action) => {
         state.myposts = [...state.myposts, action.payload]
+        state.status = 'created'
+        state.loading = false
       })
       // .addCase(togglePage.fulfilled, (state, action) => {
       //   state.myposts = action.payload && action.payload[1] && formatPost(action.payload[1].articles)
@@ -79,5 +85,5 @@ const ownPostSlice = createSlice({
       })
   },
 })
-
+export const { changeStatus } = ownPostSlice.actions
 export default ownPostSlice.reducer

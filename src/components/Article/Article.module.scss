@@ -22,6 +22,8 @@
     width: 46px;
     height: 46px;
     border-radius: 50%;
+    object-fit: cover;
+    object-position: 50% 50%;
   }
 
   // &__info {
@@ -31,7 +33,24 @@
   &__top {
     display: flex;
     align-items: center;
-    justify-content: center;
+  }
+
+  &__likes {
+    border: none;
+    text-decoration: none;
+    color: inherit;
+    font-size: inherit;
+    background-color: inherit;
+    line-height: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+  }
+
+  &__marked {
+    background-color: red;
   }
 
   &__tags {
@@ -94,6 +113,8 @@
     width: 46px;
     height: 46px;
     display: inline-block;
+    object-fit: cover;
+    object-position: 50% 50%;
   }
 
   &__content {

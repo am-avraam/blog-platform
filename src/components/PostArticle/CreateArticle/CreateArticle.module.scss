@@ -1,4 +1,9 @@
 .logform {
+  &__message_created {
+    text-align: center;
+    color: #1890ff;
+  }
+
   &__wrapper {
     padding: 48px 32px;
     margin: 0 auto;

@@ -1,7 +1,8 @@
 import React from 'react'
 import { Button, Form, Input, Space } from 'antd'
 
-import { create } from '../../../redux/ownPostSlice'
+import Loading from '../../Loading/Loading'
+import { create, changeStatus } from '../../../redux/ownPostSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux'
 
 import classes from './CreateArticle.module.scss'
@@ -28,6 +29,10 @@ export type ArticleInputValues = {
 const CreateArticle = () => {
   const dispatch = useAppDispatch()
   const token = useAppSelector((state) => state.user.user?.user.token)
+  const status = useAppSelector((state) => state.articles.status)
+  const { loading } = useAppSelector((state) => state.articles)
+  if (status === 'created') setTimeout(() => dispatch(changeStatus()), 7000)
+  console.log(status)
 
   const onFinish = (values: ArticleInputValues) => {
     console.log(values)
@@ -38,10 +43,12 @@ const CreateArticle = () => {
     dispatch(create([token, postData]))
     // console.log(postData)
   }
-
+  if (loading) return <Loading />
+  // if (!isLoged) return <Redirect to="/sign-in" />
   return (
     <div className={classes.logform__wrapper}>
       <Form onFinish={onFinish}>
+        {status && <h1 className={classes.logform__message_created}>Your article successfully created</h1>}
         <h2 className={classes['logform__title-create']}>Create new article</h2>
 
         <span className={classes['logform__input-sign']}>Title</span>

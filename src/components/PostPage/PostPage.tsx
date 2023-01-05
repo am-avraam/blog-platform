@@ -1,6 +1,7 @@
 import { Link, Route } from 'react-router-dom'
 import { Button } from 'antd'
 import staticMethods from 'antd/es/message'
+import ReactMarkdown from 'react-markdown'
 
 import { useAppSelector } from '../../hooks/redux'
 import { IPost } from '../../models/IPost'
@@ -20,9 +21,8 @@ const PostPage: React.FC<Props> = (slug) => {
 
   if (status === 'resolved') {
     const aimPost = posts.find((post) => post.slug === slug.slug)
-    const { body, title, tagList, author, date, description } = aimPost as IPost
+    const { body, title, tagList, author, date, description, favoritesCount } = aimPost as IPost
     const isOwnArticle = author.username === username
-    console.log(isOwnArticle)
 
     return (
       <div className={classes.wrapper}>
@@ -34,7 +34,7 @@ const PostPage: React.FC<Props> = (slug) => {
                   {title}
                 </Link>
 
-                <span className={classes.article__likes}>&#9825; 12 </span>
+                <span className={classes.article__likes}>&#9825; {favoritesCount} </span>
               </div>
               <div className={classes.article__tags}>
                 {tagList[0] && <span className={classes['article__main-tag']}>{tagList[0]}</span>}
@@ -71,7 +71,9 @@ const PostPage: React.FC<Props> = (slug) => {
               </>
             )}
           </div>
-          <div className={classes.article__body}>{body}</div>
+          <div className={classes.article__body}>
+            <ReactMarkdown>{body}</ReactMarkdown>
+          </div>
         </div>
       </div>
     )

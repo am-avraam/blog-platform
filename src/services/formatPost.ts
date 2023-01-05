@@ -7,7 +7,7 @@ const formatPost = (arr: IPost[]): IPost[] => {
     return arr.map((el) => {
       const date = format(new Date(el.updatedAt), 'MMMM dd, yyyy')
 
-      const cutTagList = el.tagList.map((tag) => tag?.slice(0, tag.indexOf('', 10)).replace(/\.$|,$|;$/, '') || null)
+      const cutTagList = el.tagList.map((tag) => tag?.slice(0, tag.indexOf('', 20)).replace(/\.$|,$|;$/, '') || null)
 
       return { ...el, tagList: [...cutTagList], date }
     })

@@ -1,17 +1,23 @@
 import { Link, Route } from 'react-router-dom'
+import uniqid from 'uniqid'
 
 import PostPage from '../PostPage/PostPage'
 import ava from '../../assets/avatar.png'
+import { likeToggle } from '../../redux/allPostsSlice'
+import { useAppDispatch, useAppSelector } from '../../hooks/redux'
+import like from '../../assets/like.svg'
+import activelike from '../../assets/activelike.png'
 
 import classes from './Article.module.scss'
+// import { useEffect } from 'react'
 
 type Props = {
   slug?: string
   props: {
+    favoritesCount: number
     slug: string
     date: string
-    cutFirstTag: string | null
-    secondTag: string | null
+    tagList: (string | null)[]
     username: string
     description: string
     title: string
@@ -21,7 +27,13 @@ type Props = {
 }
 
 const Article: React.FC<Props> = (props, addit) => {
-  const { slug, date, cutFirstTag, secondTag, username, description, title, body, image } = props.props
+  const { slug, date, username, description, title, body, image, tagList, favoritesCount } = props.props
+  const dispatch = useAppDispatch()
+  const thisPost = useAppSelector((state) => state.posts.posts).find((post) => post.slug === slug)
+  const isFavorited = thisPost?.favorited
+  // useEffect(() => {
+  // dispatch(fetchPost(slug))
+  // })
 
   return (
     <div className={classes.article}>
@@ -33,11 +45,22 @@ const Article: React.FC<Props> = (props, addit) => {
               {title}
             </Link>
 
-            <span className={classes.article__likes}>&#9825; 12 </span>
+            <button onClick={() => dispatch(likeToggle(slug))} className={classes.article__likes}>
+              <img src={isFavorited ? activelike : like} alt="like" />
+              {favoritesCount}
+            </button>
           </div>
           <div className={classes.article__tags}>
-            {cutFirstTag && <span className={classes['article__main-tag']}>{cutFirstTag}</span>}
-            {secondTag && <span className={classes.article__tag}>{secondTag}</span>}
+            {tagList[0] && <span className={classes['article__main-tag']}>{tagList[0]}</span>}
+            {tagList.length > 1 &&
+              tagList
+                .slice(1)
+                .filter((tag) => tag)
+                .map((tag) => (
+                  <span key={uniqid()} className={classes.article__tag}>
+                    {tag}
+                  </span>
+                ))}
           </div>
         </div>
         <div className={classes.article__data}>
@@ -50,7 +73,7 @@ const Article: React.FC<Props> = (props, addit) => {
           </div>
         </div>
       </div>
-      <div className={classes.article__content}>{description.substring(0, 30)}</div>
+      <div className={classes.article__content}>{description.substring(0, 150)}</div>
     </div>
   )
 }
