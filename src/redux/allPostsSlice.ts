@@ -88,19 +88,21 @@ export const togglePage = createAsyncThunk<ToggleResponse, number, { rejectValue
 export const likeToggle = createAsyncThunk<IPost, ToggleLikeArgs, { rejectValue: string }>(
   'posts/like-toggle',
   async function (params: ToggleLikeArgs, { rejectWithValue }) {
-    const response = await fetch(`https://blog.kata.academy/api/articles/${params[0]}/favorite`, {
-      method: params[1] ? 'DELETE' : 'POST',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json',
-      },
-    })
-    if (!response.ok) {
-      return rejectWithValue('Server Error')
+    if (localStorage.getItem('token')) {
+      const response = await fetch(`https://blog.kata.academy/api/articles/${params[0]}/favorite`, {
+        method: params[1] ? 'DELETE' : 'POST',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      if (!response.ok) {
+        return rejectWithValue('Server Error')
+      }
+      const favoritedArticle = await response.json()
+      const { article } = favoritedArticle
+      return article
     }
-    const favoritedArticle = await response.json()
-    const { article } = favoritedArticle
-    return article
   }
 )
 
@@ -168,12 +170,14 @@ const AllPostsSlice = createSlice({
       .addCase(togglePage.pending, setLoading)
 
       .addCase(likeToggle.fulfilled, (state, action) => {
-        state.posts = state.posts.map((post) => {
-          if (post.slug === action.payload.slug) {
-            return action.payload
-          }
-          return post
-        })
+        if (action.payload !== undefined) {
+          state.posts = state.posts.map((post) => {
+            if (post.slug === action.payload.slug) {
+              return action.payload
+            }
+            return post
+          })
+        }
 
         state.actualPost = action.payload && formatPost([action.payload])[0]
       })
@@ -184,7 +188,5 @@ const AllPostsSlice = createSlice({
       })
   },
 })
-
-// export const { one, } = postsSlice.actions
 
 export default AllPostsSlice.reducer

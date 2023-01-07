@@ -1,6 +1,5 @@
-import { Link, Redirect, Route } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { Button, message, Popconfirm } from 'antd'
-import staticMethods from 'antd/es/message'
 import ReactMarkdown from 'react-markdown'
 import { useEffect } from 'react'
 import uniqid from 'uniqid'
@@ -21,17 +20,13 @@ type Props = {
   slug: string
 }
 
-// const confirm = (slug: string) => {
-//   useAppDispatch()(deletePost(slug))
-//   message.success('Click on Yes')
-// }
-
 const cancel = (e?: React.MouseEvent<HTMLElement>) => {
   message.error('Click on No')
 }
 
 const PostPage: React.FC<Props> = (slug) => {
   const dispatch = useAppDispatch()
+  const { isLoged } = useAppSelector((state) => state.user)
 
   const confirm = (slug: string) => {
     dispatch(deletePost(slug))
@@ -63,7 +58,10 @@ const PostPage: React.FC<Props> = (slug) => {
                 </Link>
 
                 <button
-                  onClick={() => dispatch(likeToggle([slug.slug, isFavorited]))}
+                  // eslint-disable-next-line consistent-return
+                  onClick={() => {
+                    if (isLoged) return dispatch(likeToggle([slug.slug, isFavorited]))
+                  }}
                   className={classes.article__likes}
                 >
                   <img src={isFavorited ? activelike : like} alt="like" />
@@ -94,7 +92,9 @@ const PostPage: React.FC<Props> = (slug) => {
             </div>
           </div>
           <div>
-            <div className={classes.article__content}>{description.substring(0, 30)}</div>
+            <div className={classes.article__content}>
+              <ReactMarkdown>{description}</ReactMarkdown>
+            </div>
             {isOwnArticle && (
               <div className={classes.article__buttons}>
                 <Button
@@ -118,7 +118,7 @@ const PostPage: React.FC<Props> = (slug) => {
                     </a>
                   </Popconfirm>
                 </Button>
-                {/* <Button style={{ color: '#52C41A', border: '1px solid #52C41A', borderRadius: 5, width: 65 }}> */}
+
                 <Link
                   to={`/articles/${slug.slug}/edit`}
                   className={classes.article__button}
@@ -126,7 +126,6 @@ const PostPage: React.FC<Props> = (slug) => {
                 >
                   Edit
                 </Link>
-                {/* </Button> */}
               </div>
             )}
           </div>

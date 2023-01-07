@@ -82,7 +82,6 @@ export const rememberLogIn = createAsyncThunk('user/remind-login', async functio
 
   if (!response.ok) {
     return rejectWithValue('Cannot remember')
-    // throw new Error('Cannot remember')
   }
   const resp = await response.json()
 
@@ -102,7 +101,6 @@ export const logIn = createAsyncThunk<Response, PostDataToLogIn, { rejectValue: 
 
     if (!response.ok) {
       return rejectWithValue('Authorization Error')
-      // if (error instanceof Error) throw new Error('Authorization Error')
     }
     const resp = await response.json()
 
@@ -124,7 +122,6 @@ export const createUser = createAsyncThunk<Response, PostDataToCreate, { rejectV
     })
 
     if (!response.ok) {
-      // throw new Error('Try another authentication data')
       return rejectWithValue('Try another authentication data')
     }
     const resp = await response.json()

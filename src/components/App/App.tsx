@@ -1,13 +1,11 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 
 import { useAppDispatch } from '../../hooks/redux'
-import { fetchPosts, togglePage } from '../../redux/allPostsSlice'
+import { togglePage } from '../../redux/allPostsSlice'
 import '../../styles'
 import Header from '../Header/Header'
 import Articles from '../Articles/Articles'
-import Article from '../Article/Article'
 import PostPage from '../PostPage/PostPage'
 import SignUp from '../Authentication/SignUp/SignUp'
 import SignIn from '../Authentication/SignIn/SignIn'
@@ -47,7 +45,7 @@ function App() {
               return <CreateArticle slug={slug} />
             }}
           />
-          {/* /articles/{slug}/edit */}
+
           <Route path="/sign-up" exact component={SignUp} />
           <Route path="/sign-in" exact component={SignIn} />
           <Route path="/profile" exact component={EditProfile} />

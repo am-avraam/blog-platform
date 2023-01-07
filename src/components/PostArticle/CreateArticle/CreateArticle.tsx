@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo } from 'react'
 import { Button, Form, Input, Space } from 'antd'
-import { Redirect, Link } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 
 import Loading from '../../Loading/Loading'
 import { create, changeStatus, updatePost } from '../../../redux/ownPostSlice'
@@ -110,7 +109,7 @@ const CreateArticle = (props: Props) => {
                     rules={[{ required: true, message: 'Missing tag. Please write it or delete the field' }]}
                     style={{ marginBottom: 0 }}
                   >
-                    <Input placeholder="Tag" style={{ height: '40', width: '300' }} />
+                    <Input placeholder="Tag" style={{ height: '40', width: '300' }} maxLength={30} />
                   </Form.Item>
 
                   <Button danger onClick={() => remove(name)} style={{ height: '40', width: 120, marginLeft: 9 }}>

@@ -1,8 +1,8 @@
 import React from 'react'
-import { Button, Checkbox, Form, Input } from 'antd'
-import { Link, Redirect } from 'react-router-dom'
+import { Button, Form, Input } from 'antd'
+import { Redirect } from 'react-router-dom'
 
-import { PostDataToUpdate, createUser, updateUser } from '../../../redux/userSlice'
+import { PostDataToUpdate, updateUser } from '../../../redux/userSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux'
 import Loading from '../../Loading/Loading'
 
@@ -31,12 +31,7 @@ const EditProfile: React.FC = () => {
   if (!isLoged) return <Redirect to="/sign-in" />
   return (
     <div className={classes.logform__wrapper}>
-      <Form
-        name="normal_login"
-        className="login-form"
-        // initialValues={{ username: user?.user.username }}
-        onFinish={onFinish}
-      >
+      <Form name="normal_login" className="login-form" onFinish={onFinish}>
         {message === 'updated' && <h1 className={classes.logform__message_updated}>Your data successfully updated</h1>}
         {error === 'not updated' && <h1 className={classes.logform__message_failed}>Could not update your data</h1>}
 

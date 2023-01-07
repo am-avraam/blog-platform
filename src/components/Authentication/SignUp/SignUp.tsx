@@ -39,10 +39,6 @@ const SignUp: React.FC = () => {
               required: true,
               pattern: /^(?=.{3,})[a-z][a-z0-9]*$/,
 
-              // {
-              //   value: /^[a-z][a-z0-9]*$/,
-              //   message: 'You can only use lowercase English letters and numbers',
-              // },
               message: 'Use lowercase English letters and numbers.',
             },
           ]}
@@ -58,7 +54,7 @@ const SignUp: React.FC = () => {
         >
           <Input type="email" placeholder="Email address" style={{ height: '40' }} maxLength={40} />
         </Form.Item>
-        {/* fege */}
+
         <span className={classes['logform__input-sign']}> Password</span>
         <Form.Item
           name="password"
@@ -67,12 +63,10 @@ const SignUp: React.FC = () => {
         >
           <Input type="password" placeholder="Password" style={{ height: '40' }} maxLength={40} />
         </Form.Item>
-        {/* fege */}
 
         <span className={classes['logform__input-sign']}> Repeat Password</span>
         <Form.Item
           name="confirm"
-          // label="Repeat Password"
           dependencies={['password']}
           hasFeedback
           rules={[
@@ -92,10 +86,7 @@ const SignUp: React.FC = () => {
         >
           <Input.Password visibilityToggle={false} placeholder={'Password'} style={{ height: '40' }} />
         </Form.Item>
-        {/* <Form.Item name="repeat_password" rules={[{ required: true, message: 'Please input your Password!' }]}>
-          <Input type="password" placeholder="Password" style={{ height: '40' }} />
-        </Form.Item> */}
-        {/* fege */}
+
         <Form.Item style={{ marginBottom: '-3' }}>
           <span className={classes.logform__separator}></span>
           <Form.Item

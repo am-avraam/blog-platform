@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 
 import { useAppDispatch } from '../../hooks/redux'
 import './Pages.css'
-import { PostsState, togglePage } from '../../redux/allPostsSlice'
+import { togglePage } from '../../redux/allPostsSlice'
 import { State } from '../../models/stateTypes'
 
 const Pages = () => {
@@ -17,7 +17,6 @@ const Pages = () => {
       onChange={(num) => dispatch(togglePage(num))}
     />
   )
-  // onChange={ } current={ } total={ } showSizeChanger={ } hideOnSinglePage={ }
 }
 
 export default Pages

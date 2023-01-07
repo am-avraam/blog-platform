@@ -9,7 +9,6 @@ import like from '../../assets/like.svg'
 import activelike from '../../assets/activelike.png'
 
 import classes from './Article.module.scss'
-// import { useEffect } from 'react'
 
 type Props = {
   slug?: string
@@ -26,14 +25,12 @@ type Props = {
   }
 }
 
-const Article: React.FC<Props> = (props, addit) => {
-  const { slug, date, username, description, title, body, image, tagList, favoritesCount } = props.props
+const Article: React.FC<Props> = (props) => {
+  const { slug, date, username, description, title, image, tagList, favoritesCount } = props.props
   const dispatch = useAppDispatch()
   const thisPost = useAppSelector((state) => state.posts.posts).find((post) => post.slug === slug)
+  const { isLoged } = useAppSelector((state) => state.user)
   const isFavorited = thisPost?.favorited
-  // useEffect(() => {
-  // dispatch(fetchPost(slug))
-  // })
 
   return (
     <div className={classes.article}>
@@ -46,7 +43,7 @@ const Article: React.FC<Props> = (props, addit) => {
             </Link>
 
             <button onClick={() => dispatch(likeToggle([slug, isFavorited]))} className={classes.article__likes}>
-              <img src={isFavorited ? activelike : like} alt="like" />
+              <img src={isFavorited && isLoged ? activelike : like} alt="like" />
               {favoritesCount}
             </button>
           </div>

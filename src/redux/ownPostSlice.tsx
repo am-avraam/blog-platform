@@ -79,7 +79,6 @@ export const deletePost = createAsyncThunk<void, string, { rejectValue: string }
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
-        // 'Content-Type': 'application/json',
       },
     })
 
@@ -87,8 +86,6 @@ export const deletePost = createAsyncThunk<void, string, { rejectValue: string }
       return rejectWithValue('Error in article update')
     }
     const resp = await response.json()
-
-    // return resp.article
   }
 )
 

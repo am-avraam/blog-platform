@@ -1,8 +1,9 @@
-import { Link, Route, Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import { logOut } from '../../redux/userSlice'
 import { useAppSelector, useAppDispatch } from '../../hooks/redux'
 import logo from '../../assets/avatar.png'
+import { togglePage } from '../../redux/allPostsSlice'
 
 import classes from './Header.module.scss'
 
@@ -12,11 +13,10 @@ const Header: React.FC = () => {
 
   return (
     <header className={classes.header}>
-      {/* <Link to={'/articles/'} className={classes.header__title}> */}
       <a className={classes.header__title} href="/articles">
         Realworld Blog
       </a>
-      {/* </Link> */}
+
       <div className={classes.header__buttons}>
         {!isLoged && (
           <>
@@ -31,15 +31,19 @@ const Header: React.FC = () => {
         {isLoged && (
           <div className={classes['header__logged-buttons']}>
             <Link className={classes['header__logged-button']} to={'/new-article'}>
-              {/* <Redirect className={classes['header__logged-button']} to="/new-article"> */}
               Create article
-              {/* </Redirect> */}
             </Link>
             <Link className={classes['header__logged-button']} to={'/profile'}>
               <p>{user?.user.username}</p>
               <img className={classes['header__logged-avatar']} src={user?.user.image || logo} />
             </Link>
-            <button className={classes['header__logged-button']} onClick={() => dispatch(logOut())}>
+            <button
+              className={classes['header__logged-button']}
+              onClick={() => {
+                dispatch(togglePage(1))
+                dispatch(logOut())
+              }}
+            >
               Log out
             </button>
           </div>
