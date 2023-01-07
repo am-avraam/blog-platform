@@ -13,8 +13,6 @@ import { rememberLogIn } from '../../redux/userSlice'
 import EditProfile from '../Authentication/EditProfile/EditProfile'
 import CreateArticle from '../PostArticle/CreateArticle/CreateArticle'
 
-import classes from './App.module.scss'
-
 function App() {
   const dispatch = useAppDispatch()
 
@@ -24,7 +22,7 @@ function App() {
   }, [dispatch])
 
   return (
-    <div className={classes.app}>
+    <div>
       <Router>
         <Header />
         <Switch>
