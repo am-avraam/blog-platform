@@ -33,8 +33,6 @@ function isError(action: AnyAction) {
 export const create = createAsyncThunk<IPost, PostToCreate, { rejectValue: string }>(
   'articles/create=article',
   async function (data, { rejectWithValue }) {
-    console.log(data[0])
-
     const response = await fetch('https://blog.kata.academy/api/articles', {
       method: 'POST',
       headers: {
@@ -48,9 +46,49 @@ export const create = createAsyncThunk<IPost, PostToCreate, { rejectValue: strin
       return rejectWithValue('Error in article creation')
     }
     const resp = await response.json()
-    console.log(resp)
 
     return resp
+  }
+)
+
+export const updatePost = createAsyncThunk<IPost, PostToCreate, { rejectValue: string }>(
+  'articles/update-article',
+  async function (data, { rejectWithValue }) {
+    const response = await fetch(`https://blog.kata.academy/api/articles/${data[0]}`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data[1]),
+    })
+
+    if (!response.ok) {
+      return rejectWithValue('Error in article update')
+    }
+    const resp = await response.json()
+
+    return resp.article
+  }
+)
+
+export const deletePost = createAsyncThunk<void, string, { rejectValue: string }>(
+  'articles/delete-article',
+  async function (slug, { rejectWithValue }) {
+    const response = await fetch(`https://blog.kata.academy/api/articles/${slug}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        // 'Content-Type': 'application/json',
+      },
+    })
+
+    if (!response.ok) {
+      return rejectWithValue('Error in article update')
+    }
+    const resp = await response.json()
+
+    // return resp.article
   }
 )
 
@@ -75,9 +113,15 @@ const ownPostSlice = createSlice({
         state.status = 'created'
         state.loading = false
       })
-      // .addCase(togglePage.fulfilled, (state, action) => {
-      //   state.myposts = action.payload && action.payload[1] && formatPost(action.payload[1].articles)
-      // })
+
+      .addCase(updatePost.fulfilled, (state, action) => {
+        state.status = 'updated'
+        state.loading = false
+      })
+      .addCase(updatePost.pending, setLoading)
+      .addCase(togglePage.fulfilled, (state, action) => {
+        state.myposts = action.payload && action.payload[1] && formatPost(action.payload[1].articles)
+      })
 
       .addMatcher(isError, (state, action: PayloadAction<string>) => {
         state.error = action.payload

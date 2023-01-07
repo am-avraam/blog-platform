@@ -26,6 +26,36 @@
     object-position: 50% 50%;
   }
 
+  &__likes {
+    border: none;
+    text-decoration: none;
+    color: inherit;
+    font-size: inherit;
+    background-color: inherit;
+    line-height: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+  }
+
+  &__buttons {
+    margin-left: auto;
+    display: inline-flex;
+    justify-content: center;
+    width: fit-content;
+  }
+
+  &__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    text-decoration: none;
+    font-family: 'Inter';
+  }
+
   &__about {
     display: flex;
     margin-bottom: 4px;
@@ -36,7 +66,6 @@
   &__top {
     display: flex;
     align-items: center;
-    justify-content: center;
   }
 
   &__tags {

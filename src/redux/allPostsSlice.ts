@@ -8,12 +8,15 @@ import { AnyAction, createAsyncThunk, createSlice, PayloadAction } from '@reduxj
 import formatPost from '../services/formatPost'
 import { IPost } from '../models/IPost'
 
+import { updatePost } from './ownPostSlice'
+
 export type PostsState = {
   posts: IPost[]
   status: string | null
   error: string | null | unknown
   pagesCount: number
   currentPage: number
+  actualPost: IPost | undefined
 }
 
 export type Response = {
@@ -27,12 +30,15 @@ export type FavoriteResponse = {
 
 export type ToggleResponse = [number, Response]
 
+type ToggleLikeArgs = [string, boolean | undefined]
+
 const initialState: PostsState = {
   posts: [],
   status: null,
   error: null,
   pagesCount: 0,
   currentPage: 1,
+  actualPost: undefined,
 }
 
 function isError(action: AnyAction) {
@@ -79,21 +85,11 @@ export const togglePage = createAsyncThunk<ToggleResponse, number, { rejectValue
   }
 )
 
-export const likeToggle = createAsyncThunk<IPost, string, { rejectValue: string }>(
+export const likeToggle = createAsyncThunk<IPost, ToggleLikeArgs, { rejectValue: string }>(
   'posts/like-toggle',
-  async function (slug: string, { rejectWithValue }) {
-    const fetchAimPost = await fetch(`https://blog.kata.academy/api/articles/${slug}`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    })
-    const respWithPost = await fetchAimPost.json()
-    const isFavoritedAimPost = respWithPost.article.favorited
-    console.log(isFavoritedAimPost)
-
-    const response = await fetch(`https://blog.kata.academy/api/articles/${slug}/favorite`, {
-      method: 'POST',
+  async function (params: ToggleLikeArgs, { rejectWithValue }) {
+    const response = await fetch(`https://blog.kata.academy/api/articles/${params[0]}/favorite`, {
+      method: params[1] ? 'DELETE' : 'POST',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': 'application/json',
@@ -111,19 +107,25 @@ export const likeToggle = createAsyncThunk<IPost, string, { rejectValue: string 
 export const fetchPost = createAsyncThunk<IPost, string, { rejectValue: string }>(
   'posts/fetch-post',
   async function (slug: string, { rejectWithValue }) {
-    const fetchAimPost = await fetch(`https://blog.kata.academy/api/articles/${slug}`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    })
-    const response = await fetchAimPost.json()
+    let response
+    if (!localStorage.getItem('token')) {
+      response = await fetch(`https://blog.kata.academy/api/articles/${slug}`)
+    } else {
+      response = await fetch(`https://blog.kata.academy/api/articles/${slug}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+    }
 
     if (!response.ok) {
       return rejectWithValue('Server Error')
     }
+    const data = await response.json()
 
-    return response.article
+    const { article } = data
+    return article
   }
 )
 
@@ -153,17 +155,27 @@ const AllPostsSlice = createSlice({
         state.pagesCount = action.payload && action.payload[1].articlesCount
       })
 
+      .addCase(updatePost.fulfilled, (state, action) => {
+        state.actualPost = action.payload
+      })
+
+      .addCase(fetchPost.pending, setLoading)
+      .addCase(fetchPost.fulfilled, (state, action) => {
+        state.actualPost = action.payload && formatPost([action.payload])[0]
+        state.status = 'resolved'
+      })
+
       .addCase(togglePage.pending, setLoading)
 
       .addCase(likeToggle.fulfilled, (state, action) => {
-        console.log(action.payload)
-
         state.posts = state.posts.map((post) => {
           if (post.slug === action.payload.slug) {
             return action.payload
           }
           return post
         })
+
+        state.actualPost = action.payload && formatPost([action.payload])[0]
       })
 
       .addMatcher(isError, (state, action: PayloadAction<string>) => {

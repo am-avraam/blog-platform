@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 
 import { useAppDispatch } from '../../hooks/redux'
 import { fetchPosts, togglePage } from '../../redux/allPostsSlice'
@@ -39,10 +39,20 @@ function App() {
               return <PostPage slug={slug} />
             }}
           />
+          <Route
+            path="/articles/:slug/edit"
+            exact
+            render={({ match, location, history }) => {
+              const { slug } = match.params
+              return <CreateArticle slug={slug} />
+            }}
+          />
+          {/* /articles/{slug}/edit */}
           <Route path="/sign-up" exact component={SignUp} />
           <Route path="/sign-in" exact component={SignIn} />
           <Route path="/profile" exact component={EditProfile} />
           <Route path="/new-article" exact component={CreateArticle} />
+          <Redirect to="/articles" />
         </Switch>
       </Router>
     </div>

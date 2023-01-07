@@ -45,7 +45,7 @@ const Article: React.FC<Props> = (props, addit) => {
               {title}
             </Link>
 
-            <button onClick={() => dispatch(likeToggle(slug))} className={classes.article__likes}>
+            <button onClick={() => dispatch(likeToggle([slug, isFavorited]))} className={classes.article__likes}>
               <img src={isFavorited ? activelike : like} alt="like" />
               {favoritesCount}
             </button>
