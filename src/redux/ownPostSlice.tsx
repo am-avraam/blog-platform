@@ -16,9 +16,11 @@ export type OwnPostsState = {
   status: string | null
   error: string | null
   message: string
+  updated: boolean
 }
 
 const initialState: OwnPostsState = {
+  updated: false,
   myposts: [],
   loading: false,
   status: null,
@@ -112,12 +114,13 @@ const ownPostSlice = createSlice({
       })
 
       .addCase(updatePost.fulfilled, (state, action) => {
-        state.status = 'updated'
+        state.updated = true
         state.loading = false
       })
       .addCase(updatePost.pending, setLoading)
       .addCase(togglePage.fulfilled, (state, action) => {
         state.myposts = action.payload && action.payload[1] && formatPost(action.payload[1].articles)
+        state.updated = false
       })
 
       .addMatcher(isError, (state, action: PayloadAction<string>) => {

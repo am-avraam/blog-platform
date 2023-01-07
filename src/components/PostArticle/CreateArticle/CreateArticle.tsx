@@ -37,7 +37,7 @@ const CreateArticle = (props: Props) => {
   const dispatch = useAppDispatch()
 
   const aimArticleExist = useAppSelector((state) => state.posts.actualPost)
-
+  const { updated } = useAppSelector((state) => state.articles)
   const aimArticle = aimArticleExist && aimArticleExist.slug === slug ? aimArticleExist : undefined
 
   const token = useAppSelector((state) => state.user.user?.user.token)
@@ -47,8 +47,6 @@ const CreateArticle = (props: Props) => {
   if (status === 'created') setTimeout(() => dispatch(changeStatus()), 7000)
 
   const onFinish = (values: ArticleInputValues) => {
-    console.log(values)
-
     const postData: PostToCreate[1] = {
       article: { title: values.title, description: values.description, body: values.text, tagList: values.tagList },
     }
@@ -59,7 +57,7 @@ const CreateArticle = (props: Props) => {
     } else dispatch(create([token, postData]))
   }
   if (loading) return <Loading />
-  if (status === 'updated' && slug) return <Redirect push to="/articles" />
+  if (updated && slug) return <Redirect push to="/articles" />
   return (
     <div className={classes.logform__wrapper}>
       <Form onFinish={onFinish}>
