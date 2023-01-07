@@ -5,4 +5,4 @@
 
 ## Ссылка на Vercel
 
-[Click](http://movie-app-am-avraam.vercel.app/ 'Come on')
+[Click](https://blog-platform-wngn-am-avraam.vercel.app/ 'Come on')
