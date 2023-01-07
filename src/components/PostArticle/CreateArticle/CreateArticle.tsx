@@ -89,7 +89,7 @@ const CreateArticle = (props: Props) => {
         <span className={classes['logform__input-sign']}>Text</span>
         <Form.Item
           name="text"
-          initialValue={aimArticleExist?.body}
+          initialValue={aimArticle?.body}
           rules={[{ required: true, message: 'Please input your article' }]}
           style={{ marginBottom: 21 }}
         >
