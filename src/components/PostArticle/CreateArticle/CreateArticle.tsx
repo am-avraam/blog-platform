@@ -61,7 +61,9 @@ const CreateArticle = (props: Props) => {
   return (
     <div className={classes.logform__wrapper}>
       <Form onFinish={onFinish}>
-        {status && <h1 className={classes.logform__message_created}>{slug ? messages[1] : messages[0]}</h1>}
+        {status === 'created' && (
+          <h1 className={classes.logform__message_created}>{slug ? messages[1] : messages[0]}</h1>
+        )}
         <h2 className={classes['logform__title-create']}>{slug ? 'Edit article' : 'Create new article'}</h2>
 
         <span className={classes['logform__input-sign']}>Title</span>
