@@ -20,23 +20,18 @@ const CreateArticle = (props: Props) => {
   const { status: fetchAllStatus } = useAppSelector((state) => state.posts)
   const { updated, loading } = useAppSelector((state) => state.articles)
 
-  // if (!isLoged) return <Redirect to="/articles" />
-
   const aimArticle = aimArticleExist && aimArticleExist.slug === slug ? aimArticleExist : undefined
 
   const token = useAppSelector((state) => state.user.user?.user.token)
 
   const status = useAppSelector((state) => state.articles.status)
 
-  if (status === 'created') setTimeout(() => dispatch(changeStatus()), 3000)
+  if (status === 'created' || status === 'updated') setTimeout(() => dispatch(changeStatus()), 3000)
   useEffect(() => {
     if (slug && !aimArticleExist) {
       dispatch(fetchPost(slug))
     }
   }, [])
-
-  // if (!aimArticleExist && slug) return <Loading />
-  // if (slug && aimArticleExist?.author.username !== username) return <Redirect to="/articles" />
 
   const onFinish = (values: ArticleInputValues) => {
     const postData: PostToCreate[1] = {
@@ -48,9 +43,7 @@ const CreateArticle = (props: Props) => {
       dispatch(togglePage(1))
     } else dispatch(create([token, postData]))
   }
-  // if (loading) return <Loading />
 
-  // if (updated && slug) return <Redirect push to="/articles" />
   const redirect =
     // eslint-disable-next-line multiline-ternary
     !isLoged || (slug && aimArticleExist?.author.username !== username) || (updated && slug) ? (
@@ -58,13 +51,16 @@ const CreateArticle = (props: Props) => {
     ) : null
   const onLoad = (!aimArticleExist && slug) || loading || fetchAllStatus === 'loading' ? <Loading /> : null
   const showContent = !!(!redirect && !onLoad)
+  console.log(redirect)
+  console.log(updated)
+
   return (
     onLoad ||
     redirect ||
     ({ showContent } && (
       <div className={classes.logform__wrapper}>
         <Form onFinish={onFinish}>
-          {status === 'created' && (
+          {(status === 'created' || updated) && (
             <h1 className={classes.logform__message_created}>{slug ? messages[1] : messages[0]}</h1>
           )}
           <h2 className={classes['logform__title-create']}>{slug ? 'Edit article' : 'Create new article'}</h2>
