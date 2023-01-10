@@ -1,6 +1,6 @@
-import { PostsState } from '../redux/allPostsSlice'
-import { UserState } from '../redux/userSlice'
-import { OwnPostsState } from '../redux/ownPostSlice'
+import { PostsState } from '../types/slices/allPostsTypes'
+import { UserState } from '../types/slices/userTypes'
+import { OwnPostsState } from '../types/slices/ownPostsTypes'
 
 export type State = {
   posts: PostsState

@@ -1,52 +1,6 @@
-/* eslint-disable consistent-return */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable no-param-reassign */
 import { AnyAction, createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-export type Response = {
-  user: {
-    email: 'string'
-    token: 'string'
-    username: 'string'
-    bio: 'string'
-    image: 'string'
-  }
-}
-
-export interface PostDataToCreate {
-  user: {
-    username: string
-    email: string
-    password: string
-  }
-}
-
-export interface PostDataToLogIn {
-  user: {
-    email: string
-    password: string
-  }
-}
-
-export type PostDataToUpdate = [
-  string | undefined,
-  {
-    user: {
-      email?: string
-      password?: string
-      username?: string
-      image?: string
-    }
-  }
-]
-
-export type UserState = {
-  user: null | Response
-  isLoged: boolean
-  status: string | null
-  error: string | null
-  message: string
-}
+import { Response, PostDataToCreate, PostDataToLogIn, PostDataToUpdate, UserState } from '../types/slices/userTypes'
 
 const initialState: UserState = {
   user: null,
@@ -122,7 +76,7 @@ export const createUser = createAsyncThunk<Response, PostDataToCreate, { rejectV
     })
 
     if (!response.ok) {
-      return rejectWithValue('Try another authentication data')
+      return rejectWithValue('Invalid data')
     }
     const resp = await response.json()
 

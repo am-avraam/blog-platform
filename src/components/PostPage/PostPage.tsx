@@ -91,7 +91,7 @@ const PostPage: React.FC<Props> = (slug) => {
               </div>
             </div>
           </div>
-          <div>
+          <div style={{ display: 'flex' }}>
             <div className={classes.article__content}>
               <ReactMarkdown>{description}</ReactMarkdown>
             </div>

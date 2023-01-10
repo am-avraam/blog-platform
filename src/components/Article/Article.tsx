@@ -7,23 +7,9 @@ import { likeToggle } from '../../redux/allPostsSlice'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
 import like from '../../assets/like.svg'
 import activelike from '../../assets/activelike.png'
+import { Props } from '../../types/components/ArticleTypes'
 
 import classes from './Article.module.scss'
-
-type Props = {
-  slug?: string
-  props: {
-    favoritesCount: number
-    slug: string
-    date: string
-    tagList: (string | null)[]
-    username: string
-    description: string
-    title: string
-    body: string
-    image: string
-  }
-}
 
 const Article: React.FC<Props> = (props) => {
   const { slug, date, username, description, title, image, tagList, favoritesCount } = props.props
@@ -70,7 +56,9 @@ const Article: React.FC<Props> = (props) => {
           </div>
         </div>
       </div>
-      <div className={classes.article__content}>{description.substring(0, 150)}</div>
+      <div className={classes.article__content}>
+        {`${description.slice(0, description.indexOf('', 100)).replace(/\.$|,$|;$/, '')} `}
+      </div>
     </div>
   )
 }

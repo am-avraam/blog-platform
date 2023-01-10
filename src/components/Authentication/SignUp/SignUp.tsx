@@ -5,25 +5,18 @@ import { Link, Redirect } from 'react-router-dom'
 import { createUser } from '../../../redux/userSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux'
 import Loading from '../../Loading/Loading'
+import { Value } from '../../../types/components/SignUpTypes'
 
 import classes from './SignUp.module.scss'
-
-export interface Value {
-  username: string
-  email: string
-  password: string
-  confirm: string
-  remember: boolean
-}
 
 const SignUp: React.FC = () => {
   const dispatch = useAppDispatch()
   const { isLoged, status, error } = useAppSelector((state) => state.user)
   const onFinish = (values: Value) => {
     const postData = { user: { username: values.username, email: values.email, password: values.password } }
-
     dispatch(createUser(postData))
   }
+
   if (status === 'loading') return <Loading />
   if (isLoged) return <Redirect to="/articles" />
 
@@ -38,7 +31,6 @@ const SignUp: React.FC = () => {
             {
               required: true,
               pattern: /^(?=.{3,})[a-z][a-z0-9]*$/,
-
               message: 'Use lowercase English letters and numbers.',
             },
           ]}
@@ -46,6 +38,9 @@ const SignUp: React.FC = () => {
         >
           <Input placeholder="Username" style={{ height: '40' }} maxLength={20} />
         </Form.Item>
+        {error === 'Invalid data' && (
+          <div style={{ color: 'red', marginBottom: 12, marginTop: -12 }}>Try another login and(or) email</div>
+        )}
         <span className={classes['logform__input-sign']}> Email address</span>
         <Form.Item
           name="email"
@@ -54,7 +49,9 @@ const SignUp: React.FC = () => {
         >
           <Input type="email" placeholder="Email address" style={{ height: '40' }} maxLength={40} />
         </Form.Item>
-
+        {error === 'Invalid data' && (
+          <div style={{ color: 'red', marginBottom: 12, marginTop: -12 }}>Try another login and(or) email</div>
+        )}
         <span className={classes['logform__input-sign']}> Password</span>
         <Form.Item
           name="password"

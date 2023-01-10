@@ -2,17 +2,13 @@ import React from 'react'
 import { Button, Form, Input } from 'antd'
 import { Redirect } from 'react-router-dom'
 
-import { PostDataToUpdate, updateUser } from '../../../redux/userSlice'
+import { updateUser } from '../../../redux/userSlice'
+import { PostDataToUpdate } from '../../../types/slices/userTypes'
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux'
 import Loading from '../../Loading/Loading'
+import { Values } from '../../../types/components/EditProfileTypes'
 
 import classes from './EditProfile.module.scss'
-
-export interface Values {
-  username: string
-  email: string
-  password: string
-}
 
 const EditProfile: React.FC = () => {
   const dispatch = useAppDispatch()

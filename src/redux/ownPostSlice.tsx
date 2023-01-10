@@ -1,23 +1,11 @@
-/* eslint-disable consistent-return */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable no-param-reassign */
 import { AnyAction, createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { IPost } from '../models/IPost'
-import { PostToCreate } from '../components/PostArticle/CreateArticle/CreateArticle'
+import { PostToCreate } from '../types/components/CreateArticleTypes'
 import formatPost from '../services/formatPost'
+import { OwnPostsState } from '../types/slices/ownPostsTypes'
 
 import { togglePage } from './allPostsSlice'
-
-export type OwnPostsState = {
-  myposts: IPost[]
-
-  loading: boolean
-  status: string | null
-  error: string | null
-  message: string
-  updated: boolean
-}
 
 const initialState: OwnPostsState = {
   updated: false,
@@ -119,7 +107,7 @@ const ownPostSlice = createSlice({
       })
       .addCase(updatePost.pending, setLoading)
       .addCase(togglePage.fulfilled, (state, action) => {
-        state.myposts = action.payload && action.payload[1] && formatPost(action.payload[1].articles)
+        state.myposts = action.payload && action.payload[1] && action.payload[1]
         state.updated = false
       })
 

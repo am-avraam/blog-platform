@@ -1,36 +1,10 @@
-/* eslint-disable consistent-return */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable no-param-reassign */
-import { type } from 'os'
-
 import { AnyAction, createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import formatPost from '../services/formatPost'
 import { IPost } from '../models/IPost'
+import { PostsState, Response, FavoriteResponse, ToggleResponse, ToggleLikeArgs } from '../types/slices/allPostsTypes'
 
 import { updatePost } from './ownPostSlice'
-
-export type PostsState = {
-  posts: IPost[]
-  status: string | null
-  error: string | null | unknown
-  pagesCount: number
-  currentPage: number
-  actualPost: IPost | undefined
-}
-
-export type Response = {
-  articles: IPost[]
-  articlesCount: number
-}
-
-export type FavoriteResponse = {
-  article: IPost
-}
-
-export type ToggleResponse = [number, Response]
-
-type ToggleLikeArgs = [string, boolean | undefined]
 
 const initialState: PostsState = {
   posts: [],
@@ -80,8 +54,9 @@ export const togglePage = createAsyncThunk<ToggleResponse, number, { rejectValue
       return rejectWithValue('Server Error')
     }
     const data = await response.json()
-
-    return [num, data]
+    const formattedPosts = formatPost(data.articles)
+    const count = data.articlesCount
+    return [num, formattedPosts, count]
   }
 )
 
@@ -151,10 +126,10 @@ const AllPostsSlice = createSlice({
       .addCase(fetchPosts.pending, setLoading)
 
       .addCase(togglePage.fulfilled, (state, action) => {
-        state.status = 'resolved'
-        state.posts = action.payload && action.payload[1] && formatPost(action.payload[1].articles)
+        state.posts = action.payload && action.payload[1] && action.payload[1]
         state.currentPage = action.payload && action.payload[0]
-        state.pagesCount = action.payload && action.payload[1].articlesCount
+        state.pagesCount = action.payload && action.payload[2]
+        state.status = 'resolved'
       })
 
       .addCase(updatePost.fulfilled, (state, action) => {
@@ -164,6 +139,10 @@ const AllPostsSlice = createSlice({
       .addCase(fetchPost.pending, setLoading)
       .addCase(fetchPost.fulfilled, (state, action) => {
         state.actualPost = action.payload && formatPost([action.payload])[0]
+        state.posts = state.posts.map((post) => {
+          if (post.slug === action.payload.slug) post = action.payload
+          return post
+        })
         state.status = 'resolved'
       })
 

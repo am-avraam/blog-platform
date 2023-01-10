@@ -2,6 +2,11 @@ html {
 background-color: #ebeef3;
 }
 
+#root {
+max-width: 1440px;
+margin: 0 auto;
+}
+
 .ant-form-item-explain-error {
 margin-bottom: 12px;
 }
