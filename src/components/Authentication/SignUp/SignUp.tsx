@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, Checkbox, Form, Input } from 'antd'
 import { Link, Redirect } from 'react-router-dom'
 
@@ -10,10 +10,12 @@ import { Value } from '../../../types/components/SignUpTypes'
 import classes from './SignUp.module.scss'
 
 const SignUp: React.FC = () => {
+  const [data, setData] = useState(['', ''])
   const dispatch = useAppDispatch()
   const { isLoged, status, error } = useAppSelector((state) => state.user)
   const onFinish = (values: Value) => {
     const postData = { user: { username: values.username, email: values.email, password: values.password } }
+    setData([values.username, values.email])
     dispatch(createUser(postData))
   }
 
@@ -27,6 +29,7 @@ const SignUp: React.FC = () => {
         <span className={classes['logform__input-sign']}> Username</span>
         <Form.Item
           name="username"
+          initialValue={error && data[0]}
           rules={[
             {
               required: true,
@@ -44,6 +47,7 @@ const SignUp: React.FC = () => {
         <span className={classes['logform__input-sign']}> Email address</span>
         <Form.Item
           name="email"
+          initialValue={error && data[1]}
           rules={[{ required: true, message: 'Please input correct email!', type: 'email' }]}
           style={{ marginBottom: '12', height: '40' }}
         >
@@ -101,6 +105,7 @@ const SignUp: React.FC = () => {
         <Form.Item>
           <Button
             type="primary"
+            disabled={status === 'loading'}
             htmlType="submit"
             className="login-form-button"
             style={{ width: '100%', height: '40', background: ' #1890FF' }}

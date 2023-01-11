@@ -10,7 +10,7 @@ import classes from './SignIn.module.scss'
 
 const SignIn: React.FC = () => {
   const dispatch = useAppDispatch()
-  const { isLoged, error } = useAppSelector((state) => state.user)
+  const { isLoged, error, status } = useAppSelector((state) => state.user)
   if (isLoged) return <Redirect to="/articles" />
   const onFinish = (values: Value) => {
     const postData = { user: { email: values.email, password: values.password } }
@@ -49,6 +49,7 @@ const SignIn: React.FC = () => {
         {inputError}
         <Form.Item>
           <Button
+            disabled={status === 'loading'}
             type="primary"
             htmlType="submit"
             className="login-form-button"

@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown'
 import { useEffect } from 'react'
 import uniqid from 'uniqid'
 
-import { deletePost } from '../../redux/ownPostSlice'
+import { changeStatus, deletePost } from '../../redux/ownPostSlice'
 import { likeToggle, fetchPost, togglePage } from '../../redux/allPostsSlice'
 import like from '../../assets/like.svg'
 import activelike from '../../assets/activelike.png'
@@ -27,10 +27,10 @@ const cancel = (e?: React.MouseEvent<HTMLElement>) => {
 const PostPage: React.FC<Props> = (slug) => {
   const dispatch = useAppDispatch()
   const { isLoged } = useAppSelector((state) => state.user)
-
+  const { status: ownPostsStatus } = useAppSelector((state) => state.articles)
   const confirm = (slug: string) => {
     dispatch(deletePost(slug))
-    dispatch(togglePage(1))
+    // dispatch(togglePage(1))
     message.success('Click on Yes')
   }
 
@@ -40,9 +40,10 @@ const PostPage: React.FC<Props> = (slug) => {
   const { actualPost, status } = useAppSelector((state) => state.posts)
 
   const username = useAppSelector((state) => state.user.user?.user.username)
-
+  if (ownPostsStatus === 'deleted') setTimeout(() => dispatch(changeStatus()), 1000)
   const isFavorited = actualPost?.favorited
-  if (status === 'rejected') return <Redirect to="/articles" />
+  if (status === 'loading' || ownPostsStatus === 'loading') return <Loading />
+  if (status === 'rejected' || ownPostsStatus === 'deleted') return <Redirect push to="/articles" />
   if (status === 'resolved' && actualPost && typeof actualPost !== undefined) {
     const { body = '', title, tagList, author, date, description, favoritesCount } = actualPost as IPost
     const isOwnArticle = author.username === username
@@ -58,7 +59,6 @@ const PostPage: React.FC<Props> = (slug) => {
                 </Link>
 
                 <button
-                  // eslint-disable-next-line consistent-return
                   onClick={() => {
                     if (isLoged) return dispatch(likeToggle([slug.slug, isFavorited]))
                   }}

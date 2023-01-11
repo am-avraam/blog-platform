@@ -2,6 +2,7 @@
 import { useSelector } from 'react-redux'
 import uniqid from 'uniqid'
 import { format } from 'date-fns'
+import { useEffect } from 'react'
 
 import Article from '../Article/Article'
 import Loading from '../Loading/Loading'
@@ -9,12 +10,17 @@ import Pagination from '../Pagination/Pagination'
 import Error from '../Alert/Alert'
 import { IPost } from '../../models/IPost'
 import { State } from '../../models/stateTypes'
+import { useAppDispatch } from '../../hooks/redux'
+import { togglePage } from '../../redux/allPostsSlice'
 
 import a from './Articles.module.scss'
 
 const Articles: React.FC = () => {
   const { posts, status: postsStatus, error: postsError } = useSelector((state: State) => state.posts)
-
+  const dispatch = useAppDispatch()
+  useEffect(() => {
+    dispatch(togglePage(1))
+  }, [])
   if (postsStatus === 'loading') return <Loading />
   if (postsError === 'Server error') return <Error />
 

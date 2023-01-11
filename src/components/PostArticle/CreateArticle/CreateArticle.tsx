@@ -1,9 +1,10 @@
+/* eslint-disable multiline-ternary */
 import { Button, Form, Input, Space } from 'antd'
 import { Redirect } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import Loading from '../../Loading/Loading'
-import { create, changeStatus, updatePost } from '../../../redux/ownPostSlice'
+import { create, changeStatus, updatePost, resetCreated } from '../../../redux/ownPostSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux'
 import { fetchPost, togglePage } from '../../../redux/allPostsSlice'
 import { PostToCreate, ArticleInputValues, Props } from '../../../types/components/CreateArticleTypes'
@@ -18,7 +19,7 @@ const CreateArticle = (props: Props) => {
   const username = useAppSelector((state) => state.user.user?.user.username)
   const aimArticleExist = useAppSelector((state) => state.posts.actualPost)
   const { status: fetchAllStatus } = useAppSelector((state) => state.posts)
-  const { updated, loading } = useAppSelector((state) => state.articles)
+  const { updated, loading, created } = useAppSelector((state) => state.articles)
 
   const aimArticle = aimArticleExist && aimArticleExist.slug === slug ? aimArticleExist : undefined
 
@@ -26,7 +27,11 @@ const CreateArticle = (props: Props) => {
 
   const status = useAppSelector((state) => state.articles.status)
 
-  if (status === 'created' || status === 'updated') setTimeout(() => dispatch(changeStatus()), 3000)
+  if (status === 'created' || status === 'updated')
+    setTimeout(() => {
+      dispatch(resetCreated())
+      dispatch(changeStatus())
+    }, 1000)
   useEffect(() => {
     if (slug && !aimArticleExist) {
       dispatch(fetchPost(slug))
@@ -41,18 +46,21 @@ const CreateArticle = (props: Props) => {
       dispatch(updatePost([slug, postData]))
       dispatch(fetchPost(slug))
       dispatch(togglePage(1))
-    } else dispatch(create([token, postData]))
+    } else {
+      dispatch(create([token, postData]))
+    }
   }
 
   const redirect =
-    // eslint-disable-next-line multiline-ternary
     !isLoged || (slug && aimArticleExist?.author.username !== username) || (updated && slug) ? (
       <Redirect push to="/articles" />
+    ) : created ? (
+      <Redirect push to={`/articles/${created}`} />
     ) : null
-  const onLoad = (!aimArticleExist && slug) || loading || fetchAllStatus === 'loading' ? <Loading /> : null
+  const onLoad =
+    (!aimArticleExist && slug) || loading || status === 'loading' || fetchAllStatus === 'loading' ? <Loading /> : null
   const showContent = !!(!redirect && !onLoad)
-  console.log(redirect)
-  console.log(updated)
+  console.log(redirect, onLoad)
 
   return (
     onLoad ||

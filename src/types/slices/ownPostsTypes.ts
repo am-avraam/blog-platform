@@ -7,4 +7,5 @@ export type OwnPostsState = {
   error: string | null
   message: string
   updated: boolean
+  created: string | null
 }

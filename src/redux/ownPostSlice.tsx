@@ -7,6 +7,9 @@ import { OwnPostsState } from '../types/slices/ownPostsTypes'
 
 import { togglePage } from './allPostsSlice'
 
+// interface Resp {
+//   article: IPost
+// }
 const initialState: OwnPostsState = {
   updated: false,
   myposts: [],
@@ -14,6 +17,7 @@ const initialState: OwnPostsState = {
   status: null,
   error: null,
   message: '',
+  created: null,
 }
 
 function isError(action: AnyAction) {
@@ -37,7 +41,7 @@ export const create = createAsyncThunk<IPost, PostToCreate, { rejectValue: strin
     }
     const resp = await response.json()
 
-    return resp
+    return resp.article
   }
 )
 
@@ -75,7 +79,6 @@ export const deletePost = createAsyncThunk<void, string, { rejectValue: string }
     if (!response.ok) {
       return rejectWithValue('Error in article update')
     }
-    const resp = await response.json()
   }
 )
 
@@ -91,6 +94,9 @@ const ownPostSlice = createSlice({
     changeStatus(state) {
       state.status = null
     },
+    resetCreated(state) {
+      state.created = null
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -99,6 +105,7 @@ const ownPostSlice = createSlice({
         state.myposts = [...state.myposts, action.payload]
         state.status = 'created'
         state.loading = false
+        state.created = action.payload.slug
       })
 
       .addCase(updatePost.fulfilled, (state, action) => {
@@ -106,6 +113,11 @@ const ownPostSlice = createSlice({
         state.loading = false
       })
       .addCase(updatePost.pending, setLoading)
+      .addCase(deletePost.pending, setLoading)
+      .addCase(deletePost.fulfilled, (state) => {
+        state.loading = false
+        state.status = 'deleted'
+      })
       .addCase(togglePage.fulfilled, (state, action) => {
         state.myposts = action.payload && action.payload[1] && action.payload[1]
         state.updated = false
@@ -113,9 +125,11 @@ const ownPostSlice = createSlice({
 
       .addMatcher(isError, (state, action: PayloadAction<string>) => {
         state.error = action.payload
+        console.log(action.payload)
+
         state.status = 'rejected'
       })
   },
 })
-export const { changeStatus } = ownPostSlice.actions
+export const { changeStatus, resetCreated } = ownPostSlice.actions
 export default ownPostSlice.reducer
