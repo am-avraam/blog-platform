@@ -60,7 +60,6 @@ const CreateArticle = (props: Props) => {
   const onLoad =
     (!aimArticleExist && slug) || loading || status === 'loading' || fetchAllStatus === 'loading' ? <Loading /> : null
   const showContent = !!(!redirect && !onLoad)
-  console.log(redirect, onLoad)
 
   return (
     onLoad ||
