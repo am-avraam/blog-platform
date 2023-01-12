@@ -7,12 +7,13 @@ import { PostDataToUpdate } from '../../../types/slices/userTypes'
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux'
 import Loading from '../../Loading/Loading'
 import { Values } from '../../../types/components/EditProfileTypes'
+import { getUserState } from '../../../redux/selectors'
 
 import classes from './EditProfile.module.scss'
 
 const EditProfile: React.FC = () => {
   const dispatch = useAppDispatch()
-  const { isLoged, status, error, user, message } = useAppSelector((state) => state.user)
+  const { isLoged, status, error, user, message } = useAppSelector((state) => getUserState(state))
   const onFinish = (values: Values) => {
     const postData: PostDataToUpdate[1] = {
       user: {

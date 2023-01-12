@@ -12,11 +12,12 @@ import { IPost } from '../../models/IPost'
 import { State } from '../../models/stateTypes'
 import { useAppDispatch } from '../../hooks/redux'
 import { togglePage } from '../../redux/allPostsSlice'
+import { getPostsState } from '../../redux/selectors'
 
 import a from './Articles.module.scss'
 
 const Articles: React.FC = () => {
-  const { posts, status: postsStatus, error: postsError } = useSelector((state: State) => state.posts)
+  const { posts, status: postsStatus, error: postsError } = useSelector((state: State) => getPostsState(state))
   const dispatch = useAppDispatch()
   useEffect(() => {
     dispatch(togglePage(1))

@@ -13,6 +13,7 @@ import { IPost } from '../../models/IPost'
 import Loading from '../Loading/Loading'
 import Error from '../Alert/Alert'
 import ava from '../../assets/avatar.png'
+import { getAuthStatus, getPostsState, getUserName, getMyArticlesStatus } from '../../redux/selectors'
 
 import classes from './PostPage.module.scss'
 
@@ -26,8 +27,9 @@ const cancel = (e?: React.MouseEvent<HTMLElement>) => {
 
 const PostPage: React.FC<Props> = (slug) => {
   const dispatch = useAppDispatch()
-  const { isLoged } = useAppSelector((state) => state.user)
-  const { status: ownPostsStatus } = useAppSelector((state) => state.articles)
+  const isLoged = useAppSelector((state) => getAuthStatus(state))
+  // const { isLoged } = useAppSelector((state) => state.user)
+  const ownPostsStatus = useAppSelector((state) => getMyArticlesStatus(state))
   const confirm = (slug: string) => {
     dispatch(deletePost(slug))
     // dispatch(togglePage(1))
@@ -37,9 +39,9 @@ const PostPage: React.FC<Props> = (slug) => {
   useEffect(() => {
     dispatch(fetchPost(slug.slug))
   }, [dispatch])
-  const { actualPost, status } = useAppSelector((state) => state.posts)
+  const { actualPost, status } = useAppSelector((state) => getPostsState(state))
 
-  const username = useAppSelector((state) => state.user.user?.user.username)
+  const username = useAppSelector((state) => getUserName(state))
   if (ownPostsStatus === 'deleted') setTimeout(() => dispatch(changeStatus()), 1000)
   const isFavorited = actualPost?.favorited
   if (status === 'loading' || ownPostsStatus === 'loading') return <Loading />

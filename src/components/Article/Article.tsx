@@ -8,14 +8,15 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux'
 import like from '../../assets/like.svg'
 import activelike from '../../assets/activelike.png'
 import { Props } from '../../types/components/ArticleTypes'
+import { getAllPosts, getAuthStatus } from '../../redux/selectors'
 
 import classes from './Article.module.scss'
 
 const Article: React.FC<Props> = (props) => {
   const { slug, date, username, description, title, image, tagList, favoritesCount } = props.props
   const dispatch = useAppDispatch()
-  const thisPost = useAppSelector((state) => state.posts.posts).find((post) => post.slug === slug)
-  const { isLoged } = useAppSelector((state) => state.user)
+  const thisPost = useAppSelector((state) => getAllPosts(state)).find((post) => post.slug === slug)
+  const isLoged = useAppSelector((state) => getAuthStatus(state))
   const isFavorited = thisPost?.favorited
 
   return (

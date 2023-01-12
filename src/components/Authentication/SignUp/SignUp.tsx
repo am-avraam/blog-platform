@@ -6,13 +6,14 @@ import { createUser } from '../../../redux/userSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux'
 import Loading from '../../Loading/Loading'
 import { Value } from '../../../types/components/SignUpTypes'
+import { getUserState } from '../../../redux/selectors'
 
 import classes from './SignUp.module.scss'
 
 const SignUp: React.FC = () => {
   const [data, setData] = useState(['', ''])
   const dispatch = useAppDispatch()
-  const { isLoged, status, error } = useAppSelector((state) => state.user)
+  const { isLoged, status, error } = useAppSelector((state) => getUserState(state))
   const onFinish = (values: Value) => {
     const postData = { user: { username: values.username, email: values.email, password: values.password } }
     setData([values.username, values.email])

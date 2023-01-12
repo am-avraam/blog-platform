@@ -4,11 +4,12 @@ import { logOut } from '../../redux/userSlice'
 import { useAppSelector, useAppDispatch } from '../../hooks/redux'
 import logo from '../../assets/avatar.png'
 import { togglePage } from '../../redux/allPostsSlice'
+import { getUserState } from '../../redux/selectors'
 
 import classes from './Header.module.scss'
 
 const Header: React.FC = () => {
-  const { isLoged, user } = useAppSelector((state) => state.user)
+  const { isLoged, user } = useAppSelector((state) => getUserState(state))
   const dispatch = useAppDispatch()
 
   return (

@@ -8,24 +8,33 @@ import { create, changeStatus, updatePost, resetCreated } from '../../../redux/o
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux'
 import { fetchPost, togglePage } from '../../../redux/allPostsSlice'
 import { PostToCreate, ArticleInputValues, Props } from '../../../types/components/CreateArticleTypes'
+import {
+  getActualPost,
+  getAuthStatus,
+  getAllPostsStatus,
+  getUserName,
+  getArticlesState,
+  getToken,
+  getMyArticlesStatus,
+} from '../../../redux/selectors'
 
 import classes from './CreateArticle.module.scss'
 
 const CreateArticle = (props: Props) => {
   const dispatch = useAppDispatch()
   const { slug } = props
-  const { isLoged } = useAppSelector((state) => state.user)
+  const isLoged = useAppSelector((state) => getAuthStatus(state))
   const messages = ['Your article successfully created', 'Your article successfully updated']
-  const username = useAppSelector((state) => state.user.user?.user.username)
-  const aimArticleExist = useAppSelector((state) => state.posts.actualPost)
-  const { status: fetchAllStatus } = useAppSelector((state) => state.posts)
-  const { updated, loading, created } = useAppSelector((state) => state.articles)
+  const username = useAppSelector((state) => getUserName(state))
+  const aimArticleExist = useAppSelector((state) => getActualPost(state))
+  const fetchAllStatus = useAppSelector((state) => getAllPostsStatus(state))
+  const { updated, loading, created } = useAppSelector((state) => getArticlesState(state))
 
   const aimArticle = aimArticleExist && aimArticleExist.slug === slug ? aimArticleExist : undefined
 
-  const token = useAppSelector((state) => state.user.user?.user.token)
+  const token = useAppSelector((state) => getToken(state))
 
-  const status = useAppSelector((state) => state.articles.status)
+  const status = useAppSelector((state) => getMyArticlesStatus(state))
 
   if (status === 'created' || status === 'updated')
     setTimeout(() => {

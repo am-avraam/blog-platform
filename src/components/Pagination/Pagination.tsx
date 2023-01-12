@@ -5,10 +5,11 @@ import { useAppDispatch } from '../../hooks/redux'
 import './Pagination.css'
 import { togglePage } from '../../redux/allPostsSlice'
 import { State } from '../../models/stateTypes'
+import { getPostsState } from '../../redux/selectors'
 
 const Pagination = () => {
   const dispatch = useAppDispatch()
-  const { pagesCount, currentPage } = useSelector((state: State) => state.posts)
+  const { pagesCount, currentPage } = useSelector((state: State) => getPostsState(state))
   return (
     <Paginate
       total={(pagesCount / 5) * 10}

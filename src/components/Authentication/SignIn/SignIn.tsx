@@ -5,12 +5,13 @@ import { Link, Redirect } from 'react-router-dom'
 import { logIn } from '../../../redux/userSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux'
 import { Value } from '../../../types/components/SignInTypes'
+import { getUserState } from '../../../redux/selectors'
 
 import classes from './SignIn.module.scss'
 
 const SignIn: React.FC = () => {
   const dispatch = useAppDispatch()
-  const { isLoged, error, status } = useAppSelector((state) => state.user)
+  const { isLoged, error, status } = useAppSelector((state) => getUserState(state))
   if (isLoged) return <Redirect to="/articles" />
   const onFinish = (values: Value) => {
     const postData = { user: { email: values.email, password: values.password } }
