@@ -1,7 +1,7 @@
 /* eslint-disable multiline-ternary */
 import { Button, Form, Input, Space } from 'antd'
 import { Redirect } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import Loading from '../../Loading/Loading'
 import { create, changeStatus, updatePost, resetCreated } from '../../../redux/ownPostSlice'
@@ -23,24 +23,23 @@ import classes from './CreateArticle.module.scss'
 const CreateArticle = (props: Props) => {
   const dispatch = useAppDispatch()
   const { slug } = props
+
+  const token = useAppSelector((state) => getToken(state))
   const isLoged = useAppSelector((state) => getAuthStatus(state))
-  const messages = ['Your article successfully created', 'Your article successfully updated']
   const username = useAppSelector((state) => getUserName(state))
+  const status = useAppSelector((state) => getMyArticlesStatus(state))
   const aimArticleExist = useAppSelector((state) => getActualPost(state))
   const fetchAllStatus = useAppSelector((state) => getAllPostsStatus(state))
   const { updated, loading, created } = useAppSelector((state) => getArticlesState(state))
 
   const aimArticle = aimArticleExist && aimArticleExist.slug === slug ? aimArticleExist : undefined
 
-  const token = useAppSelector((state) => getToken(state))
-
-  const status = useAppSelector((state) => getMyArticlesStatus(state))
-
   if (status === 'created' || status === 'updated')
     setTimeout(() => {
       dispatch(resetCreated())
       dispatch(changeStatus())
     }, 1000)
+
   useEffect(() => {
     if (slug && !aimArticleExist) {
       dispatch(fetchPost(slug))
@@ -76,9 +75,6 @@ const CreateArticle = (props: Props) => {
     ({ showContent } && (
       <div className={classes.logform__wrapper}>
         <Form onFinish={onFinish}>
-          {(status === 'created' || updated) && (
-            <h1 className={classes.logform__message_created}>{slug ? messages[1] : messages[0]}</h1>
-          )}
           <h2 className={classes['logform__title-create']}>{slug ? 'Edit article' : 'Create new article'}</h2>
 
           <span className={classes['logform__input-sign']}>Title</span>

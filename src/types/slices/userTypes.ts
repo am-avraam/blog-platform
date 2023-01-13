@@ -1,10 +1,10 @@
 export type Response = {
   user: {
-    email: 'string'
-    token: 'string'
-    username: 'string'
-    bio: 'string'
-    image: 'string'
+    email: string
+    token: string
+    username: string
+    bio: string
+    image: string
   }
 }
 

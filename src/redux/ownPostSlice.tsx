@@ -2,14 +2,10 @@ import { AnyAction, createAsyncThunk, createSlice, PayloadAction } from '@reduxj
 
 import { IPost } from '../models/IPost'
 import { PostToCreate } from '../types/components/CreateArticleTypes'
-import formatPost from '../services/formatPost'
 import { OwnPostsState } from '../types/slices/ownPostsTypes'
 
 import { togglePage } from './allPostsSlice'
 
-// interface Resp {
-//   article: IPost
-// }
 const initialState: OwnPostsState = {
   updated: false,
   myposts: [],

@@ -1,8 +1,8 @@
 import { AnyAction, createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import formatPost from '../services/formatPost'
+import formatPost from '../lib/formatPost'
 import { IPost } from '../models/IPost'
-import { PostsState, Response, FavoriteResponse, ToggleResponse, ToggleLikeArgs } from '../types/slices/allPostsTypes'
+import { PostsState, Response, ToggleResponse, ToggleLikeArgs } from '../types/slices/allPostsTypes'
 
 import { updatePost } from './ownPostSlice'
 
